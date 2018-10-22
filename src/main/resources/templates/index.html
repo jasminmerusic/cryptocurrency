@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>CryptoCurrencies</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"
+          th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}">
+
+    <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous" th:src="@{/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js}"></script>
+</head>
+<body>
+<!--/*@thymesVar id="cryptos" type="java.util.Map<Integer, jasmin.merusic.domain.Crypto>"*/-->
+<!--/*@thymesVar id="crypto" type="jasmin.merusic.domain.Crypto"*/-->
+<!--/*@thymesVar id="fiat" type="jasmin.merusic.cryptocurrency.wrap.Fiat"*/-->
+<!--/*@thymesVar id="detailed" type="jasmin.merusic.cryptocurrency.wrap.Detailed"*/-->
+<div class="container-fluid" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-primary">
+                <form  th:action="@{/values/detailedCurrency/}" method="post">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label>ID of the Currency to show results</label>
+                                <input id="idCurrency" name="idCurrency" type="number" class="form-control"/>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="panel-heading">
+                    <h1 class="panel-title">CryptoCurrencies from API</h1>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive" th:if="${not #maps.isEmpty(cryptos)}">
+                        <table class="table table-hover">
+                            <thead class="thead-inverse">
+                            <tr>
+                                <th>Name</th>
+                                <th>
+                                   <form   th:action="@{/values/fiatCurrency}"  th:object="${fiat}" method="post">
+                                        <select th:field="*{fiatCurrency}" onchange="this.form.submit()">
+                                            <option id="USD" th:value="USD" th:text="USD"> </option>
+                                            <option id="EUR" th:value="EUR" th:text="EUR"> </option>
+                                            <option id="CNY" th:value="CNY" th:text="CNY"> </option>
+                                        </select>
+                                   </form>
+                                </th>
+                                <th>Change in 24h(%)</th>
+                                <th>Rank</th>
+                                <th>Symbol</th>
+                                <th>ID</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="crypto : ${cryptos.values()}">
+                                <td th:text="${crypto.name}">Marka</td>
+                                <div th:if="${crypto.quotes.keySet().size()==1}">
+                                    <td th:text="${crypto.quotes.get('USD').price}">Vrijednost</td>
+                                    <td th:text="${crypto.quotes.get('USD').percent_change_24h}">Promjena</td>
+                                </div>
+                                <div  th:if="${crypto.quotes.keySet().size()>1 && crypto.quotes.containsKey('EUR')}">
+                                    <td th:text="${crypto.quotes.get('EUR').price}">Vrijednost</td>
+                                    <td th:text="${crypto.quotes.get('EUR').percent_change_24h}">Promjena</td>
+                                </div>
+                                <div th:if="${crypto.quotes.keySet().size()>1 && crypto.quotes.containsKey('CNY')}">
+                                    <td th:text="${crypto.quotes.get('CNY').price}">Vrijednost</td>
+                                    <td th:text="${crypto.quotes.get('CNY').percent_change_24h}">Promjena</td>
+                                </div>
+                                <td th:text="${crypto.rank}">Rank</td>
+                                <td th:text="${crypto.symbol}">Symbol</td>
+                                <td th:text="${crypto.getId()}">ID</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
