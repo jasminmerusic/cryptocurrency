@@ -25,6 +25,8 @@ public class DataController {
 
         return "index";
     }
+
+
     @ModelAttribute
     public void addModelAttribute(Map<String, Object> model) {
         model.put("fiat", new Fiat());
@@ -36,6 +38,6 @@ public class DataController {
     public String choseCurrency(Model model,
                                 @ModelAttribute Fiat fiat) {
           model.addAttribute("cryptos", apiService.getInDifferentValues(fiat.getFiatCurrency()));
-        return "index";
+          return "index";
     }
 }

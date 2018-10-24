@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -26,12 +27,13 @@ public class DetailedController {
     public void addModelAttribute(Map<String, Object> model) {
         model.put("detailed", new Detailed());
     }
-    @GetMapping(value = {"/values2"} )
-    public String index2(Model model){
 
-        model.addAttribute("cryptos",apiService.getCrypto2(100));
+    @GetMapping(value = {"/values2/{id}"} )
+    public String index2(Model model, @PathVariable Integer id){
 
-        return "index";
+        model.addAttribute("valueBTC", apiService.getInDifferentValues2(id));
+
+        return "nesto";
     }
 
     @PostMapping(value = "/values/detailedCurrency")
